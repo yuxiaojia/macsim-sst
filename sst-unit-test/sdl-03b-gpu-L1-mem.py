@@ -39,7 +39,7 @@ macsim.addParams({
     "mem_size" : MEM_SIZE,
     "debug": DEBUG_CORE,
     "debug_level": DEBUG_LEVEL,
-    "nvbit_core": True
+    "nvbit_core": True,
 })
 macsim_icache_if = macsim.setSubComponent("core0_icache", "memHierarchy.standardInterface")
 macsim_icache_if.addParams({

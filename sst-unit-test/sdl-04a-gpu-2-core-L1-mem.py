@@ -38,6 +38,7 @@ macsim.addParams({
     "mem_size" : MEM_SIZE,
     "debug": DEBUG_CORE,
     "debug_level": DEBUG_LEVEL,
+    "nvbit_core": True,
 })
 
 # Core 0 interface

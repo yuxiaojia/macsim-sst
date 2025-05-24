@@ -38,6 +38,7 @@ macsim_0.addParams({
     "mem_size" : MEM_SIZE,
     "debug": DEBUG_CORE,
     "debug_level": DEBUG_LEVEL,
+    "nvbit_core": True,
 })
 
 ########################################
@@ -53,6 +54,7 @@ macsim_1.addParams({
     "mem_size" : MEM_SIZE,
     "debug": DEBUG_CORE,
     "debug_level": DEBUG_LEVEL,
+    "nvbit_core": True,
 })
 
 ########################################
