@@ -965,7 +965,7 @@ int exec_c::access_const_texture_cache(uop_c* uop) {
   auto i = m_uop_buffer.find(key);
   ASSERTM(m_uop_buffer.end() == i, "uop has already been executed!\n");
 
-  int block_size = KNOB(KNOB_L1_SMALL_LINE_SIZE)->getValue();
+  int block_size = 64; //KNOB(KNOB_L1_SMALL_LINE_SIZE)->getValue();  // might need hardcode
   // Addr block_addr = uop->m_vaddr & ~((uint64_t)block_size-1);
 
   // if the requested block spans a cache line boundary, generate only one request for the first block

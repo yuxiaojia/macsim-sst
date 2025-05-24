@@ -96,9 +96,10 @@ pref_framework_on 1
 bug_detector_enable 1
 
 sim_cycle_count 0
-max_insts 200000000
+max_insts 20000000
+max_insts1 1000000000
 heartbeat_interval 1000000
-forward_progress_limit 100000
+forward_progress_limit 10000000
 blocks_to_simulate 0
 ptx_exec_ratio 2
 num_warp_scheduler 2

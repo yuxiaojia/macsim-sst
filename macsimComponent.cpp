@@ -65,9 +65,9 @@ macsimComponent::macsimComponent(ComponentId_t id, Params& params)
   } else if (params.find<bool>("igpu_core", 0)) {
     m_acc_type = IGPU_CORE;
     m_acc_core = 1;
-  // } else if (params.find<bool>("nvbit_core", 0)) {    // FIXME: 
-  //   m_acc_type = NVBIT_CORE;
-  //   m_acc_core = 1;
+  } else if (params.find<bool>("nvbit_core", 0)) {    // Fix me: Need to add Constant Cache and Texture Cache
+    m_acc_type = NVBIT_CORE;
+    m_acc_core = 1;
     
   } else {
     m_acc_core = 0;

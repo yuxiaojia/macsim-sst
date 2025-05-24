@@ -9,7 +9,7 @@ from common import *
 
 # 0: None, 1: Stdout, 2: Stderr, 3: File
 DEBUG_CORE          = 1
-DEBUG_CORE_LINKS    = 0
+DEBUG_CORE_LINKS    = 1
 DEBUG_L1            = 0
 DEBUG_L2            = 0     # L2 Caches
 DEBUG_MEM           = 0
@@ -33,12 +33,12 @@ MEM_END = MEM_START + MEM_SIZE - 1
 macsim = sst.Component("macsimComponent", "macsimComponent.macsimComponent")
 macsim.addParams({
     "param_file": "params.in",
-    "trace_file": "trace_file_list_gpu",
+    "trace_file": "trace_file_list",
     "output_dir": "output_dir",
     "command_line": "--num_sim_cores=1 --num_sim_large_cores=0 --num_sim_small_cores=1 --use_memhierarchy=1 --core_type=nvbit",
     "frequency" : "2GHz",
     "num_cores" : "1",
-    "num_links": "1",
+    "num_link": "1",
     "mem_size" : MEM_SIZE,
     "debug": DEBUG_CORE,
     "debug_level": DEBUG_LEVEL,

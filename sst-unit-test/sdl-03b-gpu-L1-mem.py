@@ -14,8 +14,8 @@ DEBUG_MEM   = 1
 DEBUG_LINKS = 0
 DEBUG_BUS   = 0
 
-DEBUG_LEVEL = 5
-VERBOSE     = 10
+DEBUG_LEVEL = 0
+VERBOSE     = 0
 
 ########################################
 # System Parameters
@@ -30,15 +30,16 @@ MEM_END = MEM_START + MEM_SIZE - 1
 macsim = sst.Component("macsimComponent", "macsimComponent.macsimComponent")
 macsim.addParams({
     "param_file": "params.in",
-    "trace_file": "trace_file_list_gpu",
+    "trace_file": "trace_file_list",
     "output_dir": "output_dir",
     "command_line": "--num_sim_cores=1 --num_sim_large_cores=0 --num_sim_small_cores=1 --use_memhierarchy=1 --core_type=nvbit",
     "frequency" : "2GHz",
     "num_cores" : "1",
-    "num_links": "1",
+    "num_link": "1",
     "mem_size" : MEM_SIZE,
     "debug": DEBUG_CORE,
     "debug_level": DEBUG_LEVEL,
+    "nvbit_core": True
 })
 macsim_icache_if = macsim.setSubComponent("core0_icache", "memHierarchy.standardInterface")
 macsim_icache_if.addParams({
@@ -51,6 +52,18 @@ macsim_dcache_if.addParams({
     'debug': DEBUG_LINKS,
     'debug_level': DEBUG_LEVEL,
     'verbose': VERBOSE
+})
+macsim_ccache_if = macsim.setSubComponent("core0_ccache", "memHierarchy.standardInterface")
+macsim_ccache_if.addParams({
+    'debug': DEBUG_LINKS,
+    'debug_level': DEBUG_LEVEL,
+    'verbose': 10
+})
+macsim_tcache_if = macsim.setSubComponent("core0_tcache", "memHierarchy.standardInterface")
+macsim_tcache_if.addParams({
+    'debug': DEBUG_LINKS,
+    'debug_level': DEBUG_LEVEL,
+    'verbose': 10
 })
 
 
@@ -79,6 +92,37 @@ core0_dcache.addParams({
     "coherence_protocol" : "MSI",
     "associativity" : "4",
     "cache_line_size" : "64",
+    "debug" : DEBUG_L1,
+    "debug_level" : DEBUG_LEVEL,
+    "verbose" : VERBOSE,
+    "L1" : "1",
+    "cache_size" : "2KiB"
+})
+# ########################################
+# # Const Caches
+core0_ccache = sst.Component("core0_ccache", "memHierarchy.Cache")
+core0_ccache.addParams({
+    "access_latency_cycles" : "3",
+    "cache_frequency" : "3.5Ghz",
+    "replacement_policy" : "lru",
+    "coherence_protocol" : "MSI",
+    "associativity" : "4",
+    "cache_line_size" : "128",
+    "debug" : DEBUG_L1,
+    "debug_level" : DEBUG_LEVEL,
+    "verbose" : VERBOSE,
+    "L1" : "1",
+    "cache_size" : "2KiB"
+})
+
+core0_tcache = sst.Component("core0_tcache", "memHierarchy.Cache")
+core0_tcache.addParams({
+    "access_latency_cycles" : "3",
+    "cache_frequency" : "3.5Ghz",
+    "replacement_policy" : "lru",
+    "coherence_protocol" : "MSI",
+    "associativity" : "4",
+    "cache_line_size" : "128",  #set this to be 128 to align with int block_size = KNOB(KNOB_L1_SMALL_LINE_SIZE)->getValue(); 
     "debug" : DEBUG_L1,
     "debug_level" : DEBUG_LEVEL,
     "verbose" : VERBOSE,
@@ -125,11 +169,23 @@ link_macsim_icache.connect( (macsim_icache_if, "port", "1000ps"), (core0_icache,
 link_macsim_dcache = sst.Link("link_macsim_dcache")
 link_macsim_dcache.connect( (macsim_dcache_if, "port", "1000ps"), (core0_dcache, "high_network_0", "1000ps") )
 
+# # Macsim::core0_ccache -> L1 CCache
+link_macsim_ccache = sst.Link("link_macsim_ccache")
+link_macsim_ccache.connect( (macsim_ccache_if, "port", "1000ps"), (core0_ccache, "high_network_0", "1000ps") )
+
+# # Macsim::core0_tcache -> L1 TCache
+link_macsim_tcache = sst.Link("link_macsim_tcache")
+link_macsim_tcache.connect( (macsim_tcache_if, "port", "1000ps"), (core0_tcache, "high_network_0", "1000ps") )
+
 # L1 I/DCache -> Bus
 link_icache_bus = sst.Link("link_icache_bus")
 link_icache_bus.connect( (core0_icache, "low_network_0", "50ps"), (mem_bus, "high_network_0", "50ps") )
 link_dcache_bus = sst.Link("link_dcache_bus")
 link_dcache_bus.connect( (core0_dcache, "low_network_0", "50ps"), (mem_bus, "high_network_1", "50ps") )
+link_ccache_bus = sst.Link("link_ccache_bus")
+link_ccache_bus.connect( (core0_ccache, "low_network_0", "50ps"), (mem_bus, "high_network_2", "50ps") )
+link_tcache_bus = sst.Link("link_tcache_bus")
+link_tcache_bus.connect( (core0_tcache, "low_network_0", "50ps"), (mem_bus, "high_network_3", "50ps") )
 
 # Bus -> Memory
 link_bus_mem = sst.Link("link_bus_mem")
