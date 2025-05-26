@@ -44,13 +44,13 @@ macsim.addParams({
     "debug_level": DEBUG_LEVEL,
     "nvbit_core": True,
 })
-macsim_icache_if = macsim.setSubComponent("core0_icache", "memHierarchy.standardInterface")
+macsim_icache_if = macsim.setSubComponent("macsim0_core0_icache", "memHierarchy.standardInterface")
 macsim_icache_if.addParams({
     'debug': DEBUG_CORE_LINKS,
     'debug_level': DEBUG_LEVEL,
     'verbose': 10
 })
-macsim_dcache_if = macsim.setSubComponent("core0_dcache", "memHierarchy.standardInterface")
+macsim_dcache_if = macsim.setSubComponent("macsim0_core0_dcache", "memHierarchy.standardInterface")
 macsim_dcache_if.addParams({
     'debug': DEBUG_CORE_LINKS,
     'debug_level': DEBUG_LEVEL,
