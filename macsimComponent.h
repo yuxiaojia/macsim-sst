@@ -137,6 +137,7 @@ private:
   SST::Link *m_ipc_link;
 
   // links
+  uint32_t m_macsim_component_num; // Specify Macsim component num
   uint32_t m_num_link;
   vector<Interfaces::StandardMem *> m_instruction_cache_links;
   vector<Interfaces::StandardMem *> m_data_cache_links;
